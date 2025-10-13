@@ -86,3 +86,28 @@ Adicionar segurança ao projeto implementando autenticação. Todas as rotas pro
   Se a sessão for nula, lançar um erro 401 (Não Autorizado).
 - [x] Na app/api/transactions/route.ts chamar o getAuthenticatedUser() para aplicar a proteção 401
 - [x] Teste de Proteção da Rota
+
+
+## 🧩 Milestone 4 – Integração Completa de Autenticação (Users + Frontend)
+
+🎯 Objetivo
+
+Conectar totalmente o sistema de autenticação, garantindo que o NextAuth.js utilize o banco de dados de usuários e que o frontend possa realizar login real.
+Essa milestone consolida o fluxo completo: usuário → login → sessão → requisições autenticadas.
+
+### Tarefas
+
+- [] Configuração do Adaptador/Callbacks (NextAuth.js)
+    Implementar callbacks no authOptions (arquivo app/api/auth/[...nextauth]/route.ts) para injetar user.id e user.email no token JWT e na sessão.
+
+- [] Repositório de Usuários (repository/UsersRepository.ts)
+Criar o repositório responsável por consultar o banco de usuários, com o método getUserByEmail(email: string).
+
+- [] Service de Usuários (service/UsersService.ts)
+      Implementar o método de login, usando bcrypt para validar as credenciais contra o hash salvo no banco.
+
+- [] Página de Login (app/login/page.tsx)
+     Criar uma página de login simples (Client Component) que utilize signIn('credentials', ...) do next-auth/react.
+
+- [] Service API Cliente (lib/api-client.ts)
+  Criar um wrapper para o fetch, que inclua o token JWT (obtido via sessão) no cabeçalho Authorization em todas as requisições de API.
