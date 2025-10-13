@@ -13,6 +13,17 @@ const db: DatabaseType = new Database(dbPath);
 
 db.prepare(
   `
+  CREATE TABLE IF NOT EXISTS users (
+    id TEXT PRIMARY KEY,
+    name TEXT,
+    email TEXT UNIQUE,
+    password TEXT
+  )
+`
+).run();
+
+db.prepare(
+  `
         CREATE TABLE IF NOT EXISTS transactions (
         id TEXT PRIMARY KEY,
         date TEXT,

@@ -68,142 +68,21 @@
       ]
 - [x] Adicionar script no package.json para rodar os seeds
 
----
+## 🧩 Milestone 3 – Autenticação e Users
 
-## 💾 Milestone 3 – Implementação do Cache (better-sqlite3)
-
-**Objetivo:** Criar cache local para reduzir chamadas ao Google Sheets e otimizar desempenho.
-
-### Tarefas
-
-- [ ] Criar banco `cache.db` com tabelas:
-- [] Criar mapenamento dos nomes das colunas da planilha pt/en en/pt (No código o padrão de nome das variáveis é em inglês, logo, será preciso mapear, já que vem da planilha em português.)
-- `entries` (id, date, description, category, value, type, status)
-- `categories` (id, name)
-- `sync_info` (last_sync_timestamp)
-- [ ] Criar `Repository` para operações SQLite.
-- [ ] Implementar função `cacheIsValid()`:
-- Retorna `true` se último sync tiver menos de 2 dias.
-- [ ] Implementar método para atualizar cache após inserção, edição ou exclusão.
-- [ ] Garantir que o cache é a principal fonte de dados das rotas.
-
----
-
-## 🧠 Milestone 4 – Camadas de Abstração (Repository → Service → Route)
-
-**Objetivo:** Estruturar arquitetura limpa para isolar regras de negócio e persistência.
+Objetivo:
+Adicionar segurança ao projeto implementando autenticação. Todas as rotas protegidas devem exigir login, e será possível criar usuários que serão salvos no banco de cache. Além disso, o banco de dados será atualizado para incluir a tabela users.
 
 ### Tarefas
 
-- [ ] Criar classes:
-- `EntryRepository` e `CategoryRepository` (SQLite)
-- `EntryService` e `CategoryService` (regras de negócio)
-- [ ] Rotas API (`/api/entries`, `/api/categories`) chamam somente _services_.
-- [ ] Implementar validação e tratamento de erros centralizado.
-- [ ] Criar middlewares utilitários (ex: `handleApiError`).
+- [x] Modificar arquivo db para incluir a tabela users:
+  id (string, primary key)
+  name (string)
+  email (string, único)
+  password (string, hash)
 
----
-
-## 💻 Milestone 5 – Frontend (Dashboard + Formulários)
-
-**Objetivo:** Criar as 3 páginas principais do sistema.
-
-### Páginas
-
-1. **Dashboard**
-
-- [ ] Resumo de entradas, saídas e balanço.
-- [ ] Gráfico de evolução (Recharts).
-- [ ] Lista de despesas previstas (mês seguinte).
-
-2. **Nova Entrada**
-
-- [ ] Formulário com campos:
-  - Data
-  - Descrição
-  - Categoria
-  - Tipo (Entrada/Saída)
-  - Status (Pago/Pendente)
-- [ ] Envio para `/api/entries` (POST).
-- [ ] Validação com Zod e feedback visual.
-
-3. **Categorias**
-
-- [ ] CRUD completo.
-- [ ] Botões de editar/deletar.
-- [ ] Atualização imediata do cache.
-
----
-
-## 🧰 Milestone 6 – Sincronização e Validação do Cache
-
-**Objetivo:** Implementar mecanismo automático de atualização entre Sheets ↔ Cache.
-
-### Tarefas
-
-- [ ] Função `syncWithGoogleSheets()`:
-- Atualiza cache completo.
-- Atualiza `sync_info` com timestamp.
-- [ ] Rodar sincronização:
-- Após inserção/edição/exclusão.
-- Quando `cacheIsValid()` retornar `false`.
-- [ ] Criar botão manual “Sincronizar agora” no Dashboard.
-
----
-
-## 🧪 Milestone 7 – Testes e Refinamentos
-
-**Objetivo:** Garantir estabilidade, confiabilidade e performance.
-
-### Tarefas
-
-- [ ] Criar testes unitários (Jest) para services e repositories.
-- [ ] Criar testes de integração para rotas API.
-- [ ] Revisar UX e layout responsivo.
-- [ ] Ajustar mensagens de erro e validações.
-- [ ] Revisar logs e tratamento de falhas de rede.
-
----
-
-## 🧱 Milestone 8 – Deploy e Documentação
-
-**Objetivo:** Publicar o projeto e garantir que outros desenvolvedores possam contribuir.
-
-### Tarefas
-
-- [ ] Criar documentação (`README.md` e `API_DOCS.md`).
-- [ ] Deploy no Vercel.
-- [ ] Testar ambiente de produção com cache ativo.
-- [ ] Adicionar badge de build/status no GitHub.
-- [ ] Publicar versão `v1.0.0`.
-
----
-
-## 🕐 Cronograma Estimado
-
-| Milestone                   | Duração Estimada | Status |
-| --------------------------- | ---------------- | ------ |
-| 1. Estruturação do Projeto  | 2 dias           | 🔜     |
-| 2. Integração Google Sheets | 3 dias           | 🔜     |
-| 3. Cache SQLite             | 3 dias           | 🔜     |
-| 4. Camadas de Abstração     | 2 dias           | 🔜     |
-| 5. Frontend                 | 5 dias           | 🔜     |
-| 6. Sincronização            | 2 dias           | 🔜     |
-| 7. Testes e Refinamentos    | 3 dias           | 🔜     |
-| 8. Deploy e Documentação    | 2 dias           | 🔜     |
-
----
-
-## 🧩 Observações Finais
-
-- O foco inicial é **funcionalidade + arquitetura limpa**.
-- O design pode ser aprimorado em versões futuras.
-- A estrutura de camadas (Repository → Service → Route) garantirá que, futuramente, seja simples substituir o Google Sheets por um banco real (ex: PostgreSQL).
-
----
-
-## 🏁 Próximos Passos
-
-1. Criar repositório GitHub.
-2. Iniciar **Milestone 1 – Estruturação do Projeto**.
-3. Documentar decisões técnicas no repositório (`docs/`).
+- [x] Helper de Autenticação (lib/auth-helper.ts)
+  Criar uma função utilitária getAuthenticatedUser() para buscar a sessão (usando getServerSession) e garantir que o usuário está logado.
+  Se a sessão for nula, lançar um erro 401 (Não Autorizado).
+- [x] Na app/api/transactions/route.ts chamar o getAuthenticatedUser() para aplicar a proteção 401
+- [x] Teste de Proteção da Rota
