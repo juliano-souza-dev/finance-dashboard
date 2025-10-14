@@ -9,7 +9,7 @@ import { env } from "@/env";
 
 const userService: UsersService = new UsersService()
 
-export const authOptions: AuthOptions = {
+const authOptions: AuthOptions = {
     providers: [
        CredentialsProvider({
         name: "Credentials",
