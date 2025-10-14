@@ -7,6 +7,7 @@ const GoogleServiceAccountSchema = z.object({
   private_key: z.string(),
   client_email: z.string(),
   spreadsheetId: z.string(),
+  NEXTAUTH_SECRET: z.string()
 });
 
 const _env = GoogleServiceAccountSchema.safeParse(process.env);
@@ -15,3 +16,4 @@ if (_env.success === false) {
   throw new Error("Invalid enviroment variables!");
 }
 export const env = _env.data;
+

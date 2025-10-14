@@ -97,17 +97,16 @@ Essa milestone consolida o fluxo completo: usuário → login → sessão → re
 
 ### Tarefas
 
-- [] Configuração do Adaptador/Callbacks (NextAuth.js)
+- [x] Configuração do Adaptador/Callbacks (NextAuth.js)
     Implementar callbacks no authOptions (arquivo app/api/auth/[...nextauth]/route.ts) para injetar user.id e user.email no token JWT e na sessão.
 
-- [] Repositório de Usuários (repository/UsersRepository.ts)
+- [x] Repositório de Usuários (repository/UsersRepository.ts)
 Criar o repositório responsável por consultar o banco de usuários, com o método getUserByEmail(email: string).
 
-- [] Service de Usuários (service/UsersService.ts)
+- [x] Service de Usuários (service/UsersService.ts)
       Implementar o método de login, usando bcrypt para validar as credenciais contra o hash salvo no banco.
+- [x] Conectar  o Service ao NextAuth.js
 
-- [] Página de Login (app/login/page.tsx)
+- [x] Página de Login (app/login/page.tsx)
      Criar uma página de login simples (Client Component) que utilize signIn('credentials', ...) do next-auth/react.
 
-- [] Service API Cliente (lib/api-client.ts)
-  Criar um wrapper para o fetch, que inclua o token JWT (obtido via sessão) no cabeçalho Authorization em todas as requisições de API.

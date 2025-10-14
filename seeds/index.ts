@@ -1,8 +1,11 @@
-// src/seeds/transactionsSeed.ts
+import  bcrypt  from 'bcrypt'
 
-import db, { DatabaseType } from "../lib/Database";
+import { UsersRepository } from "@/lib/repositories/UsersRepository";
+import db from "../lib/Database";
 import { TransactionSchema, Transaction } from "../schemas/transactions-schema"; // Ajuste o caminho conforme necessário
-
+import { randomUUID } from 'crypto';
+import { User } from '@/types';
+const database = db;
 const transactionsSeedData: Transaction[] = [
   {
     id: "1",
@@ -33,12 +36,18 @@ const transactionsSeedData: Transaction[] = [
   },
 ];
 
+const testUser: User = {
+        id: randomUUID(), 
+        name: "Usuário Teste",
+        email:   "user@test.com",
+        password:  await bcrypt.hash('password123', 10)
+    };
 /**
  * Executa a inserção dos dados de teste na tabela 'transactions'.
  * Garante que os dados são válidos usando o Zod Schema.
  * @param database A instância do banco de dados.
  */
-function seedTransactions(database: DatabaseType) {
+function seedTransactions() {
   console.log("--- Iniciando Seed de Transações ---");
   let insertedCount = 0;
 
@@ -80,10 +89,25 @@ function seedTransactions(database: DatabaseType) {
   );
 }
 
+async function seedTestUser() {
+   console.log("--- Iniciando Seed de Usuários ---");
+
+const stmt = database.prepare(`
+        INSERT OR REPLACE INTO users (
+            id, name, email, password
+        ) VALUES (
+            @id, @name, @email, @password
+        );
+    `)
+    stmt.run(testUser)
+
+  
+}
 // 6. Função de execução principal para o script
 function runSeedScript() {
   try {
-    seedTransactions(db);
+    seedTransactions();
+    seedTestUser()
   } catch (error) {
     console.error("❌ Falha crítica ao executar o script de seed:", error);
     process.exit(1);

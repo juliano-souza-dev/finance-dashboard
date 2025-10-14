@@ -7,15 +7,17 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "db:seed": "npx tsx ./seeds/transactionsSeed.ts"
+    "db:seed": "npx tsx ./seeds/index.ts"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "better-sqlite3": "^12.4.1",
     "date-fns": "^4.1.0",
     "dotenv": "^17.2.3",
     "googleapis": "^162.0.0",
     "next": "15.5.4",
     "next-auth": "^4.24.11",
+    "ntl": "^5.1.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "recharts": "^3.2.1",
@@ -23,6 +25,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/bcrypt": "^6.0.0",
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^20",
     "@types/react": "^19",
