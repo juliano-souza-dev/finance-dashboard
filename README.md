@@ -110,3 +110,14 @@ Criar o repositório responsável por consultar o banco de usuários, com o mét
 - [x] Página de Login (app/login/page.tsx)
      Criar uma página de login simples (Client Component) que utilize signIn('credentials', ...) do next-auth/react.
 
+## 🧩Milestone 5 — Estrutura Visual e Organização de Rotas
+
+🎯 Objetivo 
+
+Dar o primeiro passo visual e estrutural do sistema: criar os grupos de páginas, implementar o layout visual inicial da dashboard e aplicar uma estilização profissional à página de login.
+
+### Tarefas
+
+- [x] Estilização da página de login
+- [x] Criação dos grupos de páginas
+- [] Formatação inicial e primeiros components da dashboard.

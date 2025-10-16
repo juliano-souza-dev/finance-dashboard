@@ -1,19 +1,8 @@
-'use client'
-
-import NextAuthSessionProvider from "@/providers";
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+import "./global.css"
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html>
-      <body>
-        <NextAuthSessionProvider>
-          {children}
-        </NextAuthSessionProvider>
-      </body>
+    <html lang="pt-BR">
+      <body>{children}</body>
     </html>
   );
 }
