@@ -1,0 +1,39 @@
+
+/* ---------------------------------------------------- */
+/* NAVEGAÇÃO INFERIOR FIXA (Footer)                     */
+/* ---------------------------------------------------- */
+.bottomNav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 60px;
+  background-color: #000000; /* Preto mais sólido para o nav */
+  border-top: 1px solid var(--color-border);
+  z-index: 50;
+}
+
+.navItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  color: var(--color-text-light); /* Ícones e texto cinza */
+  font-size: 0.75rem;
+  text-decoration: none;
+  cursor: pointer;
+  flex: 1;
+}
+
+.navItemActive {
+  color: var(--color-primary); /* Destaque azul para ativo */
+}
+
+.navIcon {
+  font-size: 1.5rem;
+  margin-bottom: 2px;
+}

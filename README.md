@@ -120,4 +120,4 @@ Dar o primeiro passo visual e estrutural do sistema: criar os grupos de páginas
 
 - [x] Estilização da página de login
 - [x] Criação dos grupos de páginas
-- [] Formatação inicial e primeiros components da dashboard.
+- [x] Formatação inicial e primeiros components da dashboard.

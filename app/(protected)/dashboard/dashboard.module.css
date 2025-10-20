@@ -1,155 +1,127 @@
 /* app/(app)/dashboard/Dashboard.module.css */
 
-/* VARIÁVEIS DE TEMA */
+/* ---------------------------------------------------- */
+/* VARIÁVEIS DE TEMA (Ajuste fino para o fundo preto da imagem) */
+/* ---------------------------------------------------- */
 
-
+/* ---------------------------------------------------- */
+/* ESTRUTURA PRINCIPAL (Ajuste para navegação fixa)    */
+/* ---------------------------------------------------- */
 .dashboardContainer {
   display: flex;
   flex-direction: column;
-  gap: 24px; /* Espaçamento padrão entre seções */
+  gap: 2rem;
   padding: 16px;
+  padding-bottom: 80px; /* Espaço para a navegação inferior fixa */
   background-color: var(--color-background);
   min-height: 100vh;
-}
-
-/* TÍTULO PRINCIPAL */
-.header {
-  color: var(--color-text-dark);
-  font-size: 1.75rem; /* 28px */
-  font-weight: 700;
-  border-bottom: 2px solid #e2e8f0;
-  padding-bottom: 8px;
+  color: var(--color-text-main);
 }
 
 /* ---------------------------------------------------- */
-/* 2. CARTÕES DE RESUMO (Mobile First: Coluna Única)    */
+/* CABEÇALHO SUPERIOR FIXO (Menu, Mês e Ações)          */
 /* ---------------------------------------------------- */
-.summaryGrid {
-  display: grid;
-  grid-template-columns: 1fr;
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  background-color: var(--color-background);
+  color: var(--color-text-main);
+  /* Fixa o cabeçalho no topo (opcional, mas comum em mobile) */
+  /* position: sticky; 
+  top: 0;
+  z-index: 10; */
+}
+
+.topBarRight {
+  display: flex;
   gap: 16px;
 }
 
-.summaryCard {
-  background-color: var(--color-surface);
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: var(--shadow-default);
+.iconButton {
+  background: none;
+  border: none;
+  color: var(--color-text-main);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.monthSelector {
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 100px;
-}
-
-.cardTitle {
-  font-size: 0.875rem; /* 14px */
-  color: var(--color-text-light);
-  font-weight: 500;
-  margin-bottom: 8px;
-}
-
-.cardValue {
-  font-size: 1.5rem; /* 24px */
-  font-weight: 700;
-  color: var(--color-text-dark);
-}
-
-/* Estilos de Cor Específicos */
-.cardBalance {
-  color: var(--color-primary); /* Balanço usa cor primária */
-}
-.cardBalance.positive {
-  color: var(--color-success); /* Balanço Positivo */
-}
-.cardBalance.negative {
-  color: var(--color-danger); /* Balanço Negativo */
-}
-
-/* ---------------------------------------------------- */
-/* 3. SEÇÃO DE GRÁFICOS (Gráfico de Barras Estático)     */
-/* ---------------------------------------------------- */
-.chartSection {
-  background-color: var(--color-surface);
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: var(--shadow-default);
-}
-
-.chartTitle {
-  font-size: 1.25rem;
-  color: var(--color-text-dark);
-  margin-bottom: 20px;
-  font-weight: 600;
-}
-
-.chartContainer {
-  /* Área do gráfico */
-  height: 300px; 
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-start;
-  padding-right: 10px;
-}
-
-.chartBarContainer {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  height: 100%;
-  align-items: flex-end;
-  border-left: 1px solid #e2e8f0;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.barWrapper {
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  width: 15%; /* 6 barras em 100% (ajustar conforme o número de meses) */
-  height: 100%;
-  justify-content: flex-end;
+  font-size: 1.25rem;
+  font-weight: 500;
 }
 
-.bar {
-  width: 80%;
-  background-color: var(--color-primary);
-  border-radius: 4px 4px 0 0;
-  transition: height 0.3s ease-in-out;
-  position: relative;
+/* ---------------------------------------------------- */
+/* SEÇÃO DE RESUMO (Balanço do mês)                     */
+/* ---------------------------------------------------- */
+
+.balanceSection {
+  padding: 16px;
+  text-align: center;
+  border-bottom: 1px solid var(--color-border);
 }
 
-.barLabel {
-  position: absolute;
-  top: -20px;
-  font-size: 0.75rem;
-  color: var(--color-text-dark);
-  font-weight: 600;
-}
-
-.barMonth {
-  font-size: 0.75rem;
-  color: var(--color-text-light);
+.balanceTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
   margin-top: 5px;
 }
 
+.balanceIcon {
+  font-size: 2.5rem;
+  margin-bottom: 5px;
+}
 
-/* ---------------------------------------------------- */
-/* 4. MEDIA QUERIES (Tablet e Desktop)                  */
-/* ---------------------------------------------------- */
+.balanceValue {
+  font-size: 2.5rem; /* R$0,00 grande */
+  font-weight: 700;
+  margin-top: 10px;
+}
 
-@media (min-width: 640px) {
+.summaryRow {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 30px;
+  text-align: left;
+}
+
+.summaryItem {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  align-items: flex-start;
+}
+
+.itemLabel {
+  font-size: 0.875rem;
+  color: var(--color-text-light);
+  margin-bottom: 4px;
+}
+
+.itemValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+/* Cores específicas para Despesas e Receitas */
+.valueExpense {
+  color: var(--color-danger); /* Vermelho para despesas */
+}
+.valueIncome {
+  color: var(--color-success); /* Verde para receitas */
+}
+
+
+/* Remova o padding-bottom em desktop, se quiser */
+@media (min-width: 768px) {
   .dashboardContainer {
-    padding: 24px;
+    padding-bottom: 24px;
   }
-  
-  /* Cartões de Resumo: 3 Colunas no Tablet/Desktop */
-  .summaryGrid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-  }
-  
-  .header {
-    font-size: 2rem;
+  .bottomNav {
+    /* Pode ocultar a barra inferior em telas maiores se for substituída por uma lateral */
+    display: none; 
   }
 }

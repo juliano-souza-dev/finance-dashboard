@@ -1,116 +1,86 @@
+'use client';
 
-
-import ExpenseList from '@/app/components/ExpenseList';
+import React from 'react';
 import styles from './dashboard.module.css';
+// import { useTransactions } from '@/hooks/useTransactions'; // Usaremos depois
 
-// Dados Estáticos para o Gráfico (6 Meses de Despesas/Gastos)
-const chartData = [
-  { month: 'Abr', expenses: 3500, income: 5000 },
-  { month: 'Mai', expenses: 4200, income: 6000 },
-  { month: 'Jun', expenses: 3800, income: 5500 },
-  { month: 'Jul', expenses: 4500, income: 7000 },
-  { month: 'Ago', expenses: 5100, income: 6500 },
-  { month: 'Set', expenses: 4000, income: 5800 },
-];
-
-const mockExpenses = [
-  { id: '1', description: 'Conta de Luz', amount: 120.5, dueDate: '2025-10-05', status: 'paid' },
-  { id: '2', description: 'Aluguel', amount: 1200.0, dueDate: '2025-10-10', status: 'pending' },
-  { id: '3', description: 'Internet', amount: 99.9, dueDate: '2025-10-20', status: 'overdue' },
-];
-
-
-// Dados Estáticos para o Resumo Mensal (Foco no último mês, Set)
-const lastMonthSummary = {
-  month: 'Setembro',
-  entradas: 5800.00,
-  saidas: 4000.00,
+// Dados Estáticos de Exemplo (Ainda embutidos para o mockup)
+const summaryData = {
+    month: 'out, 2025',
+    entradas: 0.00,
+    saidas: 0.00,
+    balanco: 0.00,
 };
 
-const balance = lastMonthSummary.entradas - lastMonthSummary.saidas;
-const balanceClass = balance >= 0 ? styles.positive : styles.negative;
-
-
-// Funções de Ajuda para Renderização do Gráfico
-// Encontra o valor máximo para dimensionar as barras
-const maxExpense = Math.max(...chartData.map(d => d.expenses));
-
-// Formata o valor para BRL
 const formatCurrency = (value: number) => 
   value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
 
-export default function DashboardPage() {
+export default function DashboardContent() {
+    
+    // const { transactions, isLoading, isError } = useTransactions();
+    // if (isLoading) return <div>Carregando...</div>;
+
+    const balanceClass = summaryData.balanco >= 0 ? styles.valueIncome : styles.valueExpense;
+
     return (
-        <div className={styles.dashboardContainer}>
-            <h1 className={styles.header}>Dashboard Financeira</h1>
-
-            {/* ---------------------------------------------------- */}
-            {/* 1. SEÇÃO DE RESUMO MENSAL (Entradas, Saídas, Balanço) */}
-            {/* ---------------------------------------------------- */}
-            <div className={styles.summaryGrid}>
+        <>
+      
+            <div className={styles.topBar}>
+            
+            
+                {}
+                <div className={styles.monthSelector}>
+                    <button className={styles.iconButton} style={{ fontSize: '1rem' }}>
+                        ↑↓
+                    </button>
+                    <span>{summaryData.month.toUpperCase()}</span>
+                </div>
                 
-                {/* Cartão de Entradas */}
-                <div className={styles.summaryCard}>
-                    <div className={styles.cardTitle}>Entradas em {lastMonthSummary.month}</div>
-                    <div className={styles.cardValue} style={{ color: 'var(--color-success)' }}>
-                        {formatCurrency(lastMonthSummary.entradas)}
-                    </div>
-                </div>
-
-                {/* Cartão de Saídas */}
-                <div className={styles.summaryCard}>
-                    <div className={styles.cardTitle}>Saídas em {lastMonthSummary.month}</div>
-                    <div className={styles.cardValue} style={{ color: 'var(--color-danger)' }}>
-                        {formatCurrency(lastMonthSummary.saidas)}
-                    </div>
-                </div>
-
-                {/* Cartão de Balanço */}
-                <div className={styles.summaryCard}>
-                    <div className={styles.cardTitle}>Balanço Mensal</div>
-                    <div className={`${styles.cardValue} ${styles.cardBalance} ${balanceClass}`}>
-                        {formatCurrency(balance)}
-                    </div>
-                </div>
             </div>
 
+        
+            <div className={styles.dashboardContainer}>
+            
+                <div className={styles.balanceSection}>
+                    <div className={styles.balanceIcon}>
+                         ⚖️ 
+                    </div>
+                    <div className={styles.balanceTitle}>Balanço do mês</div>
+                    <div className={`${styles.balanceValue} ${balanceClass}`}>
+                        {formatCurrency(summaryData.balanco)}
+                    </div>
 
-            {/* ---------------------------------------------------- */}
-            {/* 2. GRÁFICO (Comparativo Despesas Últimos 6 Meses)    */}
-            {/* ---------------------------------------------------- */}
-            <div className={styles.chartSection}>
-                <h2 className={styles.chartTitle}>Comparativo de Despesas (Últimos 6 Meses)</h2>
-                
-                <div className={styles.chartContainer}>
-                    <div className={styles.chartBarContainer}>
+                    <div className={styles.summaryRow}>
                         
-                        {chartData.map((data, index) => {
-                            // Altura da barra baseada na proporção do gasto máximo
-                            const heightPercentage = (data.expenses / maxExpense) * 90; 
-                            
-                            return (
-                                <div key={index} className={styles.barWrapper}>
-                                    <div 
-                                        className={styles.bar} 
-                                        style={{ height: `${heightPercentage}%` }}
-                                        title={`Despesas: ${formatCurrency(data.expenses)}`}
-                                    >
-                                        <span className={styles.barLabel}>{formatCurrency(data.expenses / 1000)}k</span>
-                                    </div>
-                                    <div className={styles.barMonth}>{data.month}</div>
-                                </div>
-                            );
-                        })}
+                        <div className={styles.summaryItem}>
+                            <div className={styles.itemLabel}>Despesas</div>
+                            <div className={`${styles.itemValue} ${styles.valueExpense}`}>
+                                - {formatCurrency(summaryData.saidas)}
+                            </div>
+                        </div>
+
+                        <div className={styles.summaryItem}>
+                            <div className={styles.itemLabel}>Receitas</div>
+                            <div className={`${styles.itemValue} ${styles.valueIncome}`}>
+                                + {formatCurrency(summaryData.entradas)}
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                {/* Aqui entrará o Gráfico e a Lista de Transações (o restante da tela) */}
+                {/* <div className={styles.chartSection}>
+                    ... seu gráfico ...
+                </div> 
+                */}
+
             </div>
             
-            {/* Aqui será adicionado o componente de listagem de transações (próxima tarefa) */}
-
-        <div>
-             <ExpenseList expenses={mockExpenses} />
-        </div>
-        </div>
+            {/* ---------------------------------------------------- */}
+            {/* C. NAVEGAÇÃO INFERIOR FIXA                           */}
+            {/* ---------------------------------------------------- */}
+          
+        </>
     );
 }

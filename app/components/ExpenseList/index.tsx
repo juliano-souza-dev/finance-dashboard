@@ -11,13 +11,17 @@ interface Expense {
   status: 'Pago' | 'Pendente';
 }
 
+type ExpenseListProps = {
+  expenses: Expense[];
+};
+
 const expenses: Expense[] = [
   { id: '1', description: 'Internet', value: 120, dueDate: '10/10/2025', status: 'Pago' },
   { id: '2', description: 'Energia', value: 240, dueDate: '15/10/2025', status: 'Pendente' },
   { id: '3', description: 'Cartão Nubank', value: 980, dueDate: '25/10/2025', status: 'Pendente' },
 ];
 
-export default function ExpensesList() {
+export default function ExpensesList({expenses}:ExpenseListProps) {
   return (
     <div className="mt-6">
       <h2 className="text-lg font-semibold mb-3 text-gray-700">Despesas do mês</h2>

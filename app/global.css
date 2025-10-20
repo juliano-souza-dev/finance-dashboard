@@ -99,6 +99,10 @@ a {
 :root {
   --background: #ffffff;
   --foreground: #171717;
+    --color-background: #111111; /* Preto Sólido */
+  --color-surface: #1f2937; /* Fundo dos cartões (se necessário) */
+  --color-text-main: #f9fafb; /* Texto principal (branco/claro) */
+  --color-border: #333333; /* Borda mais discreta */
 }
 
 
