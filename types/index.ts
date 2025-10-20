@@ -10,10 +10,17 @@ export interface Transaction {
   id: string;
   date: string;
   description: string;
-  category_id: string;
+  category: string;
   value: number;
   type: CategoryType;
   status: EntryStatus;
+}
+
+
+export interface FinancialSummary {
+    incomes: number; // Total de INCOME
+    expenses: number;   // Total de EXPENSE
+    balance: number;  // entradas - saidas
 }
 
 export interface User {
@@ -22,3 +29,14 @@ export interface User {
     email: string;
     password: string;
 }
+
+export type ExpenseStatus = 'pending' | 'paid';
+
+export interface TransactionFilters {
+    month?: string; 
+    year?: string;  
+    type?: 'income' | 'expense';
+    category?: string;
+    status?: ExpenseStatus; // <-- NOVO FILTRO: Status de pagamento
+}
+

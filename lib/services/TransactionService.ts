@@ -1,4 +1,7 @@
+import { TransactionFilters } from "@/types";
 import { TransactionsRepository } from "../repositories/TransactionsRepository";
+
+
 
 export class TransactionService {
   private transactionRepository: TransactionsRepository;
@@ -6,5 +9,8 @@ export class TransactionService {
     this.transactionRepository = new TransactionsRepository();
   }
 
-  getAll() {}
+  getAll(filters: TransactionFilters) {
+    const transactions = this.transactionRepository.getAll(filters);
+    return transactions;
+  }
 }

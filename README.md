@@ -121,3 +121,17 @@ Dar o primeiro passo visual e estrutural do sistema: criar os grupos de páginas
 - [x] Estilização da página de login
 - [x] Criação dos grupos de páginas
 - [x] Formatação inicial e primeiros components da dashboard.
+
+## 🧩Milestone 5 — Estrutura Visual e Organização de Rotas
+
+🎯 Objetivo 
+
+Carregar os dados diretamente do cache (banco de dados sqlite) e assim, tornar os dados do dashboad.
+Listar as entradas e saídas do mês corrente.
+
+
+### Tarefas
+- [x] Implementar o TransactionsService para recuperar os dados através do TransactionsRepository
+- [x] implementar o uso de filtros (ano, mês, status, tipo, categoria)
+- [x] recuperar o valor das entradas, saídas  eo balanço do mês corrente.
+- [] Listar os dados usando o componente ExpenseList

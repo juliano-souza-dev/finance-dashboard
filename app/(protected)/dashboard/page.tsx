@@ -1,7 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './dashboard.module.css';
+import { TransactionsRepository } from '@/lib/repositories/TransactionsRepository';
+import { useFetchJson } from '@/lib/hooks/useFetch';
+import { FinancialSummary, Transaction, TransactionFilters } from '@/types';
 // import { useTransactions } from '@/hooks/useTransactions'; // Usaremos depois
 
 // Dados Estáticos de Exemplo (Ainda embutidos para o mockup)
@@ -15,13 +18,35 @@ const summaryData = {
 const formatCurrency = (value: number) => 
   value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-
 export default function DashboardContent() {
     
-    // const { transactions, isLoading, isError } = useTransactions();
-    // if (isLoading) return <div>Carregando...</div>;
+const { data, error, loading } = useFetchJson<{ transactions: Transaction[] }>('/api/transactions');
+
+const transactions = data?.transactions ?? []; 
+
+if(loading) {
+    return <div>Carregando...</div>
+}
+
+    const initialSummary: FinancialSummary = {
+        incomes: 0,
+        expenses: 0,
+        balance: 0, 
+    };
+    const summary = transactions?.reduce((_acc:Omit<FinancialSummary,'balance'>, transaction: Transaction) => {
+        const value = transaction.value
+
+        if(transaction.type === 'income') {
+            _acc.incomes+= value
+        } else {
+            _acc.expenses+= value
+        }
+
+        return _acc;
+    },initialSummary)
 
     const balanceClass = summaryData.balanco >= 0 ? styles.valueIncome : styles.valueExpense;
+
 
     return (
         <>
@@ -48,7 +73,7 @@ export default function DashboardContent() {
                     </div>
                     <div className={styles.balanceTitle}>Balanço do mês</div>
                     <div className={`${styles.balanceValue} ${balanceClass}`}>
-                        {formatCurrency(summaryData.balanco)}
+                        {formatCurrency(summary?.incomes - summary.expenses)}
                     </div>
 
                     <div className={styles.summaryRow}>
@@ -56,14 +81,14 @@ export default function DashboardContent() {
                         <div className={styles.summaryItem}>
                             <div className={styles.itemLabel}>Despesas</div>
                             <div className={`${styles.itemValue} ${styles.valueExpense}`}>
-                                - {formatCurrency(summaryData.saidas)}
+                                - {formatCurrency(summary?.expenses ?? 0)}
                             </div>
                         </div>
 
                         <div className={styles.summaryItem}>
                             <div className={styles.itemLabel}>Receitas</div>
                             <div className={`${styles.itemValue} ${styles.valueIncome}`}>
-                                + {formatCurrency(summaryData.entradas)}
+                                + {formatCurrency(summary?.incomes ?? 0)}
                             </div>
                         </div>
                     </div>
@@ -75,8 +100,21 @@ export default function DashboardContent() {
                 </div> 
                 */}
 
+                <div>
+                    <h2>Entradas</h2>
+                    {
+                        transactions.map(transaction => {
+                            
+                        })
+                    }
+                </div>
+
+
+
             </div>
             
+           
+
             {/* ---------------------------------------------------- */}
             {/* C. NAVEGAÇÃO INFERIOR FIXA                           */}
             {/* ---------------------------------------------------- */}
