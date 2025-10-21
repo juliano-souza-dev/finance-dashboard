@@ -135,3 +135,21 @@ Listar as entradas e saídas do mês corrente.
 - [x] implementar o uso de filtros (ano, mês, status, tipo, categoria)
 - [x] recuperar o valor das entradas, saídas  eo balanço do mês corrente.
 - [x] Listar os dados usando o componente ExpenseList
+
+
+## Milestone 6 — Google Sheets Integration & Data Synchronization
+
+🎯 Objetivo 
+
+Conectar o sistema ao Google Sheets e criar o processo de sincronização de dados, garantindo que todas as transações sejam baixadas da planilha e armazenadas no cache local (SQLite).
+Com isso, o dashboard passa a refletir dados reais da planilha, mantendo o desempenho local e a consistência dos registros.
+
+
+### Tarefas
+- [] Criar o service GoogleSheetsService para lidar com a autenticação e comunicação com a API do Google Sheets.
+- [] Adicionar método fetchAll() para buscar todos os registros da planilha (aba Transactions).
+- [] Criar método syncWithCache() para sincronizar os dados obtidos com o banco local (SQLite):
+   Validar os dados usando o TransactionSchema (Zod).
+- [] Criar rota app/api/sync/route.ts que permita sincronização manual via endpoint /api/sync
+- [] Listar os dados usando o componente ExpenseList
+- [] (Opcional -> fazer agora ou deixar para a proxima milestone) Automatizar a sincronização na inicialização da aplicação
