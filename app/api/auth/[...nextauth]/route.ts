@@ -4,6 +4,7 @@ import NextAuth, { AuthOptions } from "next-auth";
 import {User} from '../../../../types/'
 import  CredentialsProvider  from "next-auth/providers/credentials";
 import { env } from "@/env";
+import { GoogleSheetService } from "@/lib/services/GoogleSheetService";
 
 
 
@@ -25,6 +26,7 @@ const authOptions: AuthOptions = {
                 return null;
             }
 
+             new GoogleSheetService().fetchAll()
           
             return {
                 id: user.id,

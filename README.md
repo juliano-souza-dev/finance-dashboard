@@ -146,10 +146,9 @@ Com isso, o dashboard passa a refletir dados reais da planilha, mantendo o desem
 
 
 ### Tarefas
-- [] Criar o service GoogleSheetsService para lidar com a autenticação e comunicação com a API do Google Sheets.
-- [] Adicionar método fetchAll() para buscar todos os registros da planilha (aba Transactions).
-- [] Criar método syncWithCache() para sincronizar os dados obtidos com o banco local (SQLite):
-   Validar os dados usando o TransactionSchema (Zod).
-- [] Criar rota app/api/sync/route.ts que permita sincronização manual via endpoint /api/sync
-- [] Listar os dados usando o componente ExpenseList
-- [] (Opcional -> fazer agora ou deixar para a proxima milestone) Automatizar a sincronização na inicialização da aplicação
+- [x] Criar o service GoogleSheetsService para lidar com a autenticação e comunicação com a API do Google Sheets.
+- [x] Adicionar método fetchAll() para buscar todos os registros da planilha (aba Transactions).
+- [x] Criar método saveToCache() no TransactionRepository para sincronizar os dados obtidos com o banco local (SQLite):
+- [x] Criar rota app/api/sync/route.ts que permita sincronização manual via endpoint /api/sync
+- [x] Listar os dados usando o componente ExpenseList
+- [x] (Opcional -> fazer agora ou deixar para a proxima milestone) Automatizar a sincronização na inicialização da aplicação

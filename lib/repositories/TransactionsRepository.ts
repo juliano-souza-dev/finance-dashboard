@@ -1,6 +1,5 @@
 import db, { DatabaseType } from "../Database";
 import { ExpenseStatus, Transaction, TransactionFilters } from "@/types";
-import { ExecOptionsWithBufferEncoding } from "child_process";
 import { STATUS_DB_TO_CODE, TYPE_DB_TO_CODE } from "@/constants/db-mapping";
 
 export class TransactionsRepository {
@@ -71,5 +70,27 @@ export class TransactionsRepository {
 
     return mappedRows;
 }
+  async saveToCache(transactions: Transaction[]) {
+    this.clearAll();
 
+    const stmt = this.database.prepare(` 
+      INSERT INTO ${this.tableName} 
+      (id, date, description,category,value,type,status)
+      VALUES
+      (@id, @date, @description, @category, @value, @type, @status)
+      `);
+
+      const insertMany = this.database.transaction((rows: Transaction[]) => {
+        for (const row of rows) {
+          stmt.run(row)
+        }
+      })
+      insertMany(transactions)
+    
+  }
+
+   private clearAll() {
+    const stmt = db.prepare(`DELETE FROM ${this.tableName}`);
+    stmt.run();
+  }
 }

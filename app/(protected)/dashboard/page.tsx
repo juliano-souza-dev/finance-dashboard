@@ -16,7 +16,6 @@ export default function DashboardContent() {
   if (loading) return <div>Carregando...</div>;
   if (error) return <div>Erro ao carregar transações.</div>;
 
-  // ✅ Calcula o resumo
   const summary = transactions.reduce<FinancialSummary>(
     (acc, t) => {
       if (t.type === 'income') acc.incomes += t.value;
