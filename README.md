@@ -134,4 +134,4 @@ Listar as entradas e saídas do mês corrente.
 - [x] Implementar o TransactionsService para recuperar os dados através do TransactionsRepository
 - [x] implementar o uso de filtros (ano, mês, status, tipo, categoria)
 - [x] recuperar o valor das entradas, saídas  eo balanço do mês corrente.
-- [] Listar os dados usando o componente ExpenseList
+- [x] Listar os dados usando o componente ExpenseList

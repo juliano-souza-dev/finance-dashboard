@@ -1,0 +1,87 @@
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #2b2b2b;
+  background-color: #1c1c1c;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.item:hover {
+  background-color: #242424;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.description {
+  font-weight: 600;
+  color: #f0f0f0;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.category {
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+.date {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.value {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+/* cores do tipo */
+.income .value {
+  color: #22c55e; /* verde suave */
+}
+
+.expense .value {
+  color: #ef4444; /* vermelho vibrante */
+}
+
+/* status */
+.status {
+  font-size: 0.8rem;
+  margin-top: 2px;
+}
+
+.paid {
+  color: #999;
+}
+
+.pending {
+  color: #facc15;
+}
+
+/* responsivo */
+@media (max-width: 480px) {
+  .item {
+    padding: 10px 8px;
+  }
+  .value {
+    font-size: 0.95rem;
+  }
+  .description {
+    max-width: 60vw;
+  }
+}
