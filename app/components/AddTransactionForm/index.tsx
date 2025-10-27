@@ -3,11 +3,19 @@ import React, { useState } from 'react';
 import styles from './styles.module.css'; // O arquivo de estilos para o formulário
 
 const MOCK_CATEGORIES = [
-  { id: 'C1', name: 'Alimentação' },
-  { id: 'C2', name: 'Transporte' },
-  { id: 'C3', name: 'Lazer' },
-  { id: 'C4', name: 'Salário' },
-  { id: 'C5', name: 'Outros' },
+  { id: 'q7k3p9x4', name: 'Educação' },
+  { id: 'v4n8s2h2', name: 'Saúde' },
+  { id: 'm9d2f6a8', name: 'Lazer' },
+  { id: 'y1x3z5t7', name: 'Energia' },
+  { id: 'c8r7j2l1', name: 'Água' },
+  { id: 'h5f9k1m5', name: 'Internet' },
+  { id: 'z2w6p8n4', name: 'Mercado' },
+  { id: 'b7x1t9q6', name: 'Compra de bens eletrônicos' },
+  { id: 'g3m2s7d7', name: 'Higiene Pessoal' },
+  { id: 't6y4c9p9', name: 'Moradia' },
+  { id: 'j1q7z8r2', name: 'Salário' },
+  { id: 'q5d6x4k3', name: 'Outros' },
+  { id: 'x9v8p3h2', name: 'Empréstimos' },
 ];
 
 type Props = {
@@ -118,7 +126,7 @@ export default function AddTransactionForm({ onClose, onSubmitSuccess,setLoading
         >
           <option value="" disabled>Selecione uma categoria</option>
           {MOCK_CATEGORIES.map(cat => (
-            <option key={cat.id} value={cat.id}>
+            <option key={cat.id} value={cat.name}>
               {cat.name}
             </option>
           ))}

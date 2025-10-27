@@ -20,20 +20,12 @@ export class TransactionsRepository {
   if (filters.month) {
     sql += ` AND STRFTIME('%m', date) = ?`;
     params.push(filters.month.toString().padStart(2, '0')); // garante formato 01, 02, etc.
-  } else {
-    const currentMonth = new Date().getMonth() + 1;
-    sql += ` AND STRFTIME('%m', date) = ?`;
-    params.push(currentMonth.toString().padStart(2, '0'));
-  }
+  } 
 
   if (filters.year) {
     sql += ` AND STRFTIME('%Y', date) = ?`;
     params.push(filters.year.toString());
-  } else {
-    const currentYear = new Date().getFullYear();
-    sql += ` AND STRFTIME('%Y', date) = ?`;
-    params.push(currentYear.toString());
-  }
+  } 
 
   if (filters.type) {
     const types = { expense: 'Saída', income: 'Entrada' };

@@ -160,3 +160,21 @@ Com isso, o dashboard passa a refletir dados reais da planilha, mantendo o desem
 - [x] Corrigir erros no visual no dashboard
 - [x] Conectar com o googlesheets e sincronizar
 - [x] Atualizar o dashboard automaticamente a cada inserção.
+
+
+## 🧩 Milestone 8 — Dynamic Filters for Transactions
+
+🎯 Goal
+
+Add dynamic filtering functionality to the Dashboard, allowing users to refine transactions by multiple criteria (Status, Month, Year, and Category).
+This feature improves usability and provides a faster way to locate specific data directly within the interface.
+
+✅ Tasks
+
+- [x] Create a filter state to store active filter values (month, year).
+
+- [x] Implement filter logic to dynamically update the displayed transactions.
+
+
+
+

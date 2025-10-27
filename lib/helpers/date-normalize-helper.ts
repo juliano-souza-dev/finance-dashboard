@@ -29,3 +29,19 @@ export function normalizeDateToDB(dateStr: string): string {
   const [dd, mm, yyyy] = parts;
   return `${yyyy}-${mm}-${dd}`;
 }
+
+// Helper: parse seguro de data (DD/MM/YYYY ou ISO)
+export function parseDateSafe(input?: string): Date | null {
+  if (!input) return null;
+
+  // DD/MM/YYYY
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(input)) {
+    const [dd, mm, yyyy] = input.split('/').map(Number);
+    const d = new Date(yyyy, mm - 1, dd);
+    return isNaN(d.getTime()) ? null : d;
+  }
+
+  // Tenta ISO/compatível
+  const d = new Date(input);
+  return isNaN(d.getTime()) ? null : d;
+}

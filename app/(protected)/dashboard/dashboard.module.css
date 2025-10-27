@@ -76,7 +76,7 @@
 }
 
 .balanceValue {
-  font-size: 2.5rem; /* R$0,00 grande */
+  font-size: 2.5rem; 
   font-weight: 700;
   margin-top: 10px;
 }
@@ -106,22 +106,149 @@
   font-weight: 700;
 }
 
-/* Cores específicas para Despesas e Receitas */
+
 .valueExpense {
-  color: var(--color-danger); /* Vermelho para despesas */
+  color: var(--color-danger); 
 }
 .valueIncome {
-  color: var(--color-success); /* Verde para receitas */
+  color: var(--color-success); 
 }
 
 
-/* Remova o padding-bottom em desktop, se quiser */
 @media (min-width: 768px) {
   .dashboardContainer {
     padding-bottom: 24px;
   }
   .bottomNav {
-    /* Pode ocultar a barra inferior em telas maiores se for substituída por uma lateral */
     display: none; 
   }
+}
+.topBar {
+  display: flex;
+  flex-direction: column;
+  background: #111;
+  border-bottom: 1px solid #222;
+  color: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  gap: 0.8rem;
+}
+
+.topContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.monthSelector {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.dateSelectors {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.filtersGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.iconButton {
+  background: #222;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: #fff;
+  padding: 0.4rem 0.6rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.iconButton:hover {
+  background: #333;
+}
+
+.customSelect {
+  background: #181818;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: #fff;
+  padding: 0.35rem 0.6rem;
+  font-size: 0.9rem;
+  text-transform: capitalize;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.customSelect:hover {
+  background: #222;
+}
+.customSelect:focus {
+  border-color: #555;
+}
+.customSelect::-ms-expand {
+  display: none;
+}
+
+.customSelect {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='12' viewBox='0 0 20 20' width='12' xmlns='http://www.w3.org/2000/svg'><path d='M5 8l5 5 5-5H5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 12px;
+  padding-right: 1.5rem;
+}
+.emptyState {
+  text-align: center;
+  color: #aaa;
+  padding: 2rem 1rem;
+  font-style: italic;
+}
+.summaryLinkContainer {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.summaryLink {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 0.95rem;
+  text-decoration: underline;
+  cursor: pointer;
+  text-align: center;
+  transition: color 0.2s ease;
+  line-height: 1.4;
+}
+
+.summaryLink:hover {
+  color: #66ccff;
+}
+.summaryLinkContainer {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.summaryLink {
+  background: none;
+  border: none;
+  color: #ffd166; /* amarelo suave de alerta */
+  font-size: 1rem;
+  text-decoration: underline;
+  cursor: pointer;
+  text-align: center;
+  transition: color 0.2s ease;
+  font-weight: 500;
+}
+
+.summaryLink:hover {
+  color: #ffcc33;
 }
