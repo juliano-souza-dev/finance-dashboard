@@ -1,5 +1,4 @@
-export type CategoryType = "income" | "expense";
-export type EntryStatus = "paid" | "pending";
+
 
 export interface Category {
   id: string;
@@ -12,15 +11,15 @@ export interface Transaction {
   description: string;
   category: string;
   value: number;
-  type: CategoryType;
-  status: EntryStatus;
+  type: String;
+  status: String;
 }
 
 
 export interface FinancialSummary {
-    incomes: number; // Total de INCOME
-    expenses: number;   // Total de EXPENSE
-    balance: number;  // entradas - saidas
+    incomes: number; 
+    expenses: number;  
+    balance: number;  
 }
 
 export interface User {

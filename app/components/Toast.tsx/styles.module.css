@@ -1,0 +1,20 @@
+
+
+.toast {
+  position: fixed;
+  bottom: 22px;
+  right: 22px;
+  background: #1f1f1f;
+  color: #fff;
+  padding: 14px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+  font-size: 0.95rem;
+  animation: fadeInUp 0.35s ease forwards;
+  z-index: 9999;
+}
+
+@keyframes fadeInUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}

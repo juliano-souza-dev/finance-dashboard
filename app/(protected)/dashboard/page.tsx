@@ -1,22 +1,52 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './dashboard.module.css';
-import { useFetchJson } from '@/lib/hooks/useFetch';
 import type { FinancialSummary, Transaction } from '@/types';
 import TransactionList from '@/app/components/TransactionList';
-
+import { AddTransactionButton } from '@/app/components/AddTransactionButton';
+import AddTransactionForm from '@/app/components/AddTransactionForm';
+import LoaderOverlay from '@/app/components/LoaderOverlay';
 const formatCurrency = (value: number) =>
   value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
 export default function DashboardContent() {
-  const { data, error, loading } = useFetchJson<{ transactions: Transaction[] }>('/api/transactions');
-  const transactions = data?.transactions ?? [];
+ 
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
 
-  if (loading) return <div>Carregando...</div>;
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [loading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false)
+  const handleOpenForm = () => {
+
+  setIsFormOpen(true)
+}
+const handleCloseForm = () => {
+  setIsFormOpen(false)
+}
+
+async function loadTransactions() {
+  try {
+      setIsLoading(true)
+      const res = await fetch("/api/transactions");
+      const data = await res.json();
+      setTransactions(data.transactions);
+    } catch (err) {
+      setError(true)
+      console.error("Erro ao carregar transações:", err);
+    } finally {
+      setIsLoading(false);
+    }
+}
+useEffect(() => {
+  (async () => {
+    await loadTransactions();
+  })();
+}, []);
+
   if (error) return <div>Erro ao carregar transações.</div>;
-
-  const summary = transactions.reduce<FinancialSummary>(
+  
+  const summary = transactions?.reduce<FinancialSummary>(
     (acc, t) => {
       if (t.type === 'income') acc.incomes += t.value;
       else if (t.type === 'expense') acc.expenses += t.value;
@@ -28,12 +58,14 @@ export default function DashboardContent() {
 
   const balanceClass = summary.balance >= 0 ? styles.valueIncome : styles.valueExpense;
 
-  // ✅ Filtra por tipo
   const incomes = transactions.filter((t) => t.type === 'income');
   const expenses = transactions.filter((t) => t.type === 'expense');
 
   return (
     <>
+      {loading && <LoaderOverlay />}
+
+      
       <div className={styles.topBar}>
         <div className={styles.monthSelector}>
           <button className={styles.iconButton} style={{ fontSize: '1rem' }}>
@@ -68,11 +100,19 @@ export default function DashboardContent() {
           </div>
         </div>
 
-        {/* ✅ Listas de transações */}
         <div className={styles.transactionSection}>
           <TransactionList title="Entradas" transactions={incomes} emptyMessage="Nenhuma entrada registrada." />
           <TransactionList title="Saídas" transactions={expenses} emptyMessage="Nenhuma saída registrada." />
         </div>
+
+        <AddTransactionButton onClick={handleOpenForm} />
+        {isFormOpen && (
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContent}>
+                        <AddTransactionForm onClose={handleCloseForm} onSubmitSuccess={loadTransactions} setLoading={setIsLoading}/>
+                    </div>
+                </div>
+            )}
       </div>
     </>
   );

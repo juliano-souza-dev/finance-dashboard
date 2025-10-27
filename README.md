@@ -152,3 +152,11 @@ Com isso, o dashboard passa a refletir dados reais da planilha, mantendo o desem
 - [x] Criar rota app/api/sync/route.ts que permita sincronização manual via endpoint /api/sync
 - [x] Listar os dados usando o componente ExpenseList
 - [x] (Opcional -> fazer agora ou deixar para a proxima milestone) Automatizar a sincronização na inicialização da aplicação
+
+## Milestone 7 — Transaction Form Integration + UX Improvements
+
+### Tarefas
+- [x] Criar o formulário para cadastro de novos registros
+- [x] Corrigir erros no visual no dashboard
+- [x] Conectar com o googlesheets e sincronizar
+- [x] Atualizar o dashboard automaticamente a cada inserção.

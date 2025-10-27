@@ -16,6 +16,7 @@ export function useFetchJson<T>(url: string, options?: RequestInit) {
 
       try {
         const result = await fetchJson<T>(url, options);
+     
         if (!cancelled) setData(result);
       } catch (err) {
         if (!cancelled) {

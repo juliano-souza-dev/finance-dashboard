@@ -1,5 +1,7 @@
 import { getAuthenticatedUser } from "@/lib/auth-helper";
+import { GoogleSheetService } from "@/lib/services/GoogleSheetService";
 import { TransactionService } from "@/lib/services/TransactionService";
+import { TransactionSchema } from "@/schemas/transactions-schema";
 import { TransactionFilters } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
@@ -45,7 +47,11 @@ const filters = validation.data as TransactionFilters
         
     const transactionService: TransactionService = new TransactionService();
 
+
     const transactions = transactionService.getAll(filters)
+
+
+
     return NextResponse.json({ transactions });
     
   } catch (error: unknown) {
@@ -57,4 +63,35 @@ const filters = validation.data as TransactionFilters
 
   }
 
+}
+
+export async function POST(request: NextRequest) {
+
+  const transactionServiceets:TransactionService = new TransactionService();
+
+try {
+  
+  const body = await request.json() 
+
+  const transactionData = TransactionSchema.parse(body)
+
+  await transactionServiceets.saveToSheets(transactionData)
+   
+
+
+  return NextResponse.json({ok: true})
+} catch(error: any) {
+ if (error.name === "ZodError") {
+      return NextResponse.json(
+        { error: "Erro de validação", details: error.errors },
+        { status: 400 }
+      );
+    }
+
+    console.error("Erro ao salvar transação:", error);
+     return NextResponse.json(
+      { error: "Erro interno ao salvar a transação" },
+      { status: 500 }
+    );
+}
 }
