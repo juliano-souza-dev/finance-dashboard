@@ -230,7 +230,7 @@ const testUser: User = {
  * @param database A instância do banco de dados.
  */
 function seedTransactions() {
-  console.log("--- Iniciando Seed de Transações ---");
+  
   let insertedCount = 0;
 
   // 1. Preparar a query de inserção
@@ -272,7 +272,7 @@ function seedTransactions() {
 }
 
 async function seedTestUser() {
-   console.log("--- Iniciando Seed de Usuários ---");
+   
 
 const stmt = database.prepare(`
         INSERT OR REPLACE INTO users (
@@ -295,7 +295,7 @@ function runSeedScript() {
     process.exit(1);
   } finally {
     db.close();
-    console.log("Conexão com o DB fechada.");
+    
   }
 }
 

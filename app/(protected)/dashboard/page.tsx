@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import styles from './dashboard.module.css';
 import type { FinancialSummary, Transaction } from '@/types';
 import TransactionList from '@/app/components/TransactionList';
@@ -11,21 +11,22 @@ import { parseDateSafe } from '@/lib/helpers/date-normalize-helper';
 const formatCurrency = (value?: number | null) =>
   (value ?? 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-function calculateSummary(transactions: Transaction[]): FinancialSummary {
+const calculateSummary = (transactions: Transaction[]): FinancialSummary => {
   if (!Array.isArray(transactions) || transactions.length === 0)
     return { incomes: 0, expenses: 0, balance: 0 };
 
   return transactions.reduce<FinancialSummary>(
     (acc, t) => {
-      const v = t?.value ?? 0;
-      if (t?.type === 'income') acc.incomes += v;
-      else if (t?.type === 'expense') acc.expenses += v;
+      const v = Number(t?.value) || 0;
+      const type = t?.type?.toLowerCase?.() ?? '';
+      if (['income', 'entrada'].includes(type)) acc.incomes += v;
+      else if (['expense', 'saída', 'saida'].includes(type)) acc.expenses += v;
       acc.balance = acc.incomes - acc.expenses;
       return acc;
     },
     { incomes: 0, expenses: 0, balance: 0 }
   );
-}
+};
 
 export default function DashboardContent() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -33,86 +34,119 @@ export default function DashboardContent() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [loading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
-
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
-  async function loadFilteredTransactions() {
+  const loadFilteredTransactions = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(false);
+
       const month = String(selectedMonth + 1).padStart(2, '0');
-      const res = await fetch(`/api/transactions?month=${month}&year=${selectedYear}`, { next: { revalidate: 0 } });
+      const res = await fetch(`/api/transactions?month=${month}&year=${selectedYear}`, {
+        cache: 'no-store',
+      });
+
       const data = await res.json();
-      setTransactions(Array.isArray(data.transactions) ? data.transactions : []);
+      const txs = Array.isArray(data.transactions) ? [...data.transactions] : [];
+      setTransactions(txs);
+
+      if (process.env.NODE_ENV === 'development') {
+        console.log('✅ Transações carregadas:', txs);
+      }
     } catch (err) {
-      console.error('Erro ao carregar transações:', err);
+      console.error('❌ Erro ao carregar transações:', err);
       setError(true);
+      setTransactions([]);
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [selectedMonth, selectedYear]);
 
-async function loadPendingTransactions() {
-  try {
-    // Se sua API aceita esse filtro, ótimo. Senão, mantenha só status=pending
-    const res = await fetch(`/api/transactions?status=pending`, { next: { revalidate: 0 } });
-    const data = await res.json();
 
-    if (!Array.isArray(data.transactions)) {
+  const loadPendingTransactions = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/transactions?status=pending`, { cache: 'no-store' });
+      const data = await res.json();
+      if (!Array.isArray(data.transactions)) return setPendingPayments([]);
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const filtered = data.transactions.filter((t: Transaction) => {
+        const type = t?.type?.toLowerCase?.() ?? '';
+        const status = t?.status?.toLowerCase?.() ?? '';
+        const dateObj = parseDateSafe(t.date);
+        const isExpense = ['expense', 'saída', 'saida'].includes(type);
+        const isPending = ['pending', 'pendente'].includes(status);
+        const isOverdue = !!dateObj && dateObj < today;
+        return isExpense && isPending && isOverdue;
+      });
+
+      setPendingPayments(filtered);
+
+      if (process.env.NODE_ENV === 'development') {
+        console.log('⚠️ Contas vencidas:', filtered.length);
+      }
+    } catch (err) {
+      console.error('Erro ao buscar contas pendentes:', err);
       setPendingPayments([]);
-      return;
     }
+  }, []);
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // normaliza para meia-noite
-
-    const pendingOverdue = data.transactions.filter((t: Transaction) => {
-      // Tipos possíveis, dependendo de como você salva: "saída", "saida" ou "expense"
-      const type = t.type?.toString().toLowerCase();
-      const isExpense =
-        type === 'saída' || type === 'saida' || type === 'expense';
-
-      // Status possíveis: "pendente" ou "pending"
-      const status = t.status?.toString().toLowerCase();
-      const isPending = status === 'pendente' || status === 'pending';
-
-      const dateObj = parseDateSafe(t.date);
-      const isPastDue = !!dateObj && dateObj < today;
-
-      return isExpense && isPending && isPastDue;
-    });
-
-    setPendingPayments(pendingOverdue);
-  } catch (err) {
-    console.error('Erro ao buscar contas pendentes:', err);
-    setPendingPayments([]);
-  }
-}
-
-
-  // 🔁 Efeitos
+  // ==============================
+  // 🔹 Efeitos
+  // ==============================
   useEffect(() => {
     loadFilteredTransactions();
-  }, [selectedMonth, selectedYear]);
+  }, [loadFilteredTransactions]);
 
   useEffect(() => {
     loadPendingTransactions();
-  }, []);
+  }, [loadPendingTransactions]);
 
-  const summary = calculateSummary(transactions);
+  // ==============================
+  // 🔹 Normalização e Cálculos
+  // ==============================
+  const normalizedTransactions = useMemo(() => {
+    return transactions.map((t) => {
+      const rawType = t?.type?.toLowerCase?.().trim() ?? '';
+      let normalizedType = rawType;
+
+      if (['entrada', 'income'].includes(rawType)) normalizedType = 'income';
+      else if (['saída', 'saida', 'expense'].includes(rawType)) normalizedType = 'expense';
+
+      return { ...t, type: normalizedType };
+    });
+  }, [transactions]);
+
+  const summary = useMemo(() => calculateSummary(normalizedTransactions), [normalizedTransactions]);
   const balanceClass = summary.balance >= 0 ? styles.valueIncome : styles.valueExpense;
-  const incomes = transactions.filter((t) => t.type === 'income');
-  const expenses = transactions.filter((t) => t.type === 'expense');
 
-  if (error)
+  const incomes = useMemo(
+    () => normalizedTransactions.filter((t) => t.type === 'income'),
+    [normalizedTransactions]
+  );
+  const expenses = useMemo(
+    () => normalizedTransactions.filter((t) => t.type === 'expense'),
+    [normalizedTransactions]
+  );
+
+  // ==============================
+  // 🔹 Renderização Condicional
+  // ==============================
+  if (error) {
     return (
       <div className={styles.errorState}>
         ❌ Erro ao carregar transações.
         <button onClick={loadFilteredTransactions}>Tentar novamente</button>
       </div>
     );
+  }
 
+  // ==============================
+  // 🔹 Render Principal
+  // ==============================
   return (
     <>
       {loading && <LoaderOverlay />}
@@ -120,7 +154,9 @@ async function loadPendingTransactions() {
       {/* ======== TOPO ======== */}
       <div className={styles.topBar}>
         <div className={styles.monthSelector}>
-          <button className={styles.iconButton} title="Trocar mês/ano">↑↓</button>
+          <button className={styles.iconButton} title="Trocar mês/ano">
+            ↑↓
+          </button>
 
           <div className={styles.dateSelectors}>
             <select
@@ -179,28 +215,35 @@ async function loadPendingTransactions() {
           </div>
         </div>
 
-        {/* 🔹 Mostra o aviso global de contas pendentes */}
+        {/* 🔹 Alerta de Contas Pendentes */}
         {pendingPayments.length > 0 && (
           <div className={styles.summaryLinkContainer}>
             <button
               className={styles.summaryLink}
-              onClick={() =>
-                alert('No futuro: abrirá a listagem de contas pendentes.')
-              }
+              onClick={() => alert('Em breve: abrirá listagem detalhada das pendências.')}
             >
               💸 Você tem {pendingPayments.length}{' '}
-              {pendingPayments.length === 1 ? 'conta a pagar' : 'contas a pagar'}.
+              {pendingPayments.length === 1 ? 'conta pendente' : 'contas pendentes'} vencida
+              {pendingPayments.length > 1 ? 's' : ''}.
             </button>
           </div>
         )}
 
-        {/* ======== LISTAGEM ======== */}
-        {transactions.length === 0 && !loading ? (
+        {/* ======== LISTAGENS ======== */}
+        {normalizedTransactions.length === 0 && !loading ? (
           <div className={styles.emptyState}>Nenhuma transação neste período.</div>
         ) : (
           <div className={styles.transactionSection}>
-            <TransactionList title="Entradas" transactions={incomes} emptyMessage="Nenhuma entrada." />
-            <TransactionList title="Saídas" transactions={expenses} emptyMessage="Nenhuma saída." />
+            <TransactionList
+              title="Entradas"
+              transactions={incomes}
+              emptyMessage="Nenhuma entrada."
+            />
+            <TransactionList
+              title="Saídas"
+              transactions={expenses}
+              emptyMessage="Nenhuma saída."
+            />
           </div>
         )}
 

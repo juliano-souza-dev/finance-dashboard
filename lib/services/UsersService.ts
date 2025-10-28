@@ -18,7 +18,7 @@ export class UsersService {
         const user = this.usersRepository.getUserByEmail(email);
 
         if (!user) {
-            console.log(`Tentativa de login falhou: Usuário ${email} não encontrado.`);
+            
             return null;
         }
 
@@ -30,7 +30,7 @@ export class UsersService {
             return userWithoutPassword;
         }
 
-        console.log(`Tentativa de login falhou para ${email}: Senha incorreta.`);
+        
         return null;
     }
 }

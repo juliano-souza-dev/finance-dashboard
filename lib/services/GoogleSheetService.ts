@@ -63,7 +63,7 @@ export class GoogleSheetService {
         const mappedKey = HEADER_SHEETS_TO_CODE[key as HeaderPT];
               if (mappedKey == 'date') {
               cellValue = normalizeDateToDB(row[i])
-              console.log(cellValue)
+              
               return [mappedKey ?? key, cellValue];
     
   }

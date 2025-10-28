@@ -53,7 +53,7 @@ export class TransactionsRepository {
   const stmt = this.database.prepare(sql);
   const rows = stmt.all(params) as Transaction[];
 
-  console.log("---",rows)
+  
 
   const mappedRows = rows.map((row) => ({
       ...row,
