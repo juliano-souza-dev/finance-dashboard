@@ -35,59 +35,73 @@ export class GoogleSheetService {
         this.sheetAPI = await getGoogleSheetsClient();
     }
 
+async fetchAll() {
+  await this.ensureConnection();
 
-    async fetchAll() {
+  const { data } = await this.sheetAPI.spreadsheets.values.get({
+    spreadsheetId: this.sheetID,
+    range: this.range,
+  });
 
-        await this.ensureConnection();
-        const {data} = await this.sheetAPI.spreadsheets.values.get({
-            spreadsheetId: this.sheetID,
-            range: this.range
-        })
-
-
-    
-        const {values} = data ?? [];
-
-        const headers: string[] = values?.shift() ?? []; 
-        const rows = values ?? []; 
-        
-
-        const transactionsInJson = rows.map(row =>
-        
-        Object.fromEntries(
-       
-        headers.map((key, i) => {
-
-        let cellValue: String | number = "";
-
-        const mappedKey = HEADER_SHEETS_TO_CODE[key as HeaderPT];
-              if (mappedKey == 'date') {
-              cellValue = normalizeDateToDB(row[i])
-              
-              return [mappedKey ?? key, cellValue];
-    
+  // Garante que values seja um array
+  const values = data?.values ?? [];
+  if (!values.length) {
+    console.warn('Nenhum dado encontrado na planilha.');
+    return [];
   }
-    if(mappedKey == "value") {
-      cellValue = Number(
-        String(row[i])
-            .replace(/[^\d,.-]/g, '') 
-            .replace(',', '.')     
-    );
 
-    
-            
-return [mappedKey ?? key, cellValue];
-        }
-  
-        return [mappedKey ?? key, row[i]];
+  // Extrai o cabeçalho e remove linhas totalmente vazias
+  const headers: string[] = values.shift() ?? [];
+  const rows = values.filter(
+    (row) => Array.isArray(row) && row.some((cell) => String(cell ?? '').trim() !== '')
+  );
+
+  // Mapeia para JSON
+  const transactionsInJson = rows
+    .map((row) => {
+      // Ignora linhas com menos colunas que o cabeçalho
+      if (row.length < headers.length) return null;
+
+      const obj = Object.fromEntries(
+        headers.map((key, i) => {
+          const mappedKey = HEADER_SHEETS_TO_CODE[key as HeaderPT];
+          let cellValue: string | number = row[i] ?? '';
+
+          // Normaliza data
+          if (mappedKey === 'date') {
+            cellValue = normalizeDateToDB(String(cellValue));
+            return [mappedKey, cellValue];
+          }
+
+          // Converte valor numérico
+          if (mappedKey === 'value') {
+            const numeric = Number(
+              String(cellValue).replace(/[^\d,.-]/g, '').replace(',', '.')
+            );
+            return [mappedKey, isNaN(numeric) ? 0 : numeric];
+          }
+
+          // Campos padrão
+          return [mappedKey ?? key, String(cellValue ?? '').trim()];
         })
-    )
-    );
-        
-     this.transactionsRepository.saveToCache(transactionsInJson as Transaction[]);
+      );
 
-     return values;
-    }
+      // Validação: ignora registros sem descrição, valor ou data
+      if (!obj['description'] || !obj['date'] || !obj['value']) return null;
+
+      return obj;
+    })
+    .filter(Boolean) as Transaction[];
+
+  if (transactionsInJson.length > 0) {
+    this.transactionsRepository.saveToCache(transactionsInJson);
+  } else {
+    console.warn('Nenhuma transação válida encontrada no Sheets.');
+  }
+
+  return transactionsInJson;
+}
+
 
     async appendTransaction(data: Transaction): Promise<void> {
   // 🔹 Garante formato brasileiro dd/MM/yyyy

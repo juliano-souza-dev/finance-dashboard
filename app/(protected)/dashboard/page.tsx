@@ -8,8 +8,14 @@ import AddTransactionForm from '@/app/components/AddTransactionForm';
 import LoaderOverlay from '@/app/components/LoaderOverlay';
 import { parseDateSafe } from '@/lib/helpers/date-normalize-helper';
 
-const formatCurrency = (value?: number | null) =>
-  (value ?? 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+const formatCurrency = (value?: number | string | null) => {
+  const numeric = Number(value) || 0;
+  return numeric.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  });
+};
+
 
 const calculateSummary = (transactions: Transaction[]): FinancialSummary => {
   if (!Array.isArray(transactions) || transactions.length === 0)
