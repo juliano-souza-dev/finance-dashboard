@@ -83,7 +83,7 @@ if (filters.status && ['pending', 'paid'].includes(filters.status)) {
     this.clearAll();
 
     const stmt = this.database.prepare(`
-      INSERT INTO ${this.tableName}
+       INSERT OR REPLACE INTO ${this.tableName}
       (id, date, description, category, value, type, status)
       VALUES
       (@id, @date, @description, @category, @value, @type, @status)
