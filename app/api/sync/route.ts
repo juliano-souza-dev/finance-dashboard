@@ -8,6 +8,12 @@ const googleSheetService: GoogleSheetService = new GoogleSheetService()
 export async function GET(request: NextRequest) {
 
     const result = await googleSheetService.fetchAll();
-    return NextResponse.json({result})
+    return NextResponse.json({result},{
+        headers: {
+    'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+    'Pragma': 'no-cache',
+    'Expires': '0',
+  }
+    })
 
 }

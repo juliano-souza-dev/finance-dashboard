@@ -42,7 +42,7 @@ export default function DashboardContent() {
       setIsLoading(true);
       setError(false);
       const month = String(selectedMonth + 1).padStart(2, '0');
-      const res = await fetch(`/api/transactions?month=${month}&year=${selectedYear}`);
+      const res = await fetch(`/api/transactions?month=${month}&year=${selectedYear}`, { next: { revalidate: 0 } });
       const data = await res.json();
       setTransactions(Array.isArray(data.transactions) ? data.transactions : []);
     } catch (err) {
@@ -56,7 +56,7 @@ export default function DashboardContent() {
 async function loadPendingTransactions() {
   try {
     // Se sua API aceita esse filtro, ótimo. Senão, mantenha só status=pending
-    const res = await fetch(`/api/transactions?status=pending`);
+    const res = await fetch(`/api/transactions?status=pending`, { next: { revalidate: 0 } });
     const data = await res.json();
 
     if (!Array.isArray(data.transactions)) {
