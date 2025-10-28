@@ -3,6 +3,7 @@ export const revalidate = 0;          // 🚫 nunca revalida
 export const dynamic = 'force-dynamic'; // 🚫 força execução a cada request
 export const fetchCache = 'force-no-store'; // 🚫 desativa cache global de fetch
 
+import { ensureCacheReady } from "@/lib/cache-init";
 
 import { getAuthenticatedUser } from "@/lib/auth-helper";
 import { GoogleSheetService } from "@/lib/services/GoogleSheetService";
@@ -24,6 +25,8 @@ const TransactionFiltersSchema = z.object({
 })
 
 export async function GET(request: NextRequest) {
+
+  await ensureCacheReady();
 
 const params = Object.fromEntries(
   Array.from(request.nextUrl.searchParams.entries()).map(([key, value]) => [
