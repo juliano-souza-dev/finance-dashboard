@@ -86,7 +86,7 @@ return [mappedKey ?? key, cellValue];
         
      this.transactionsRepository.saveToCache(transactionsInJson as Transaction[]);
 
-     return transactionsInJson;
+     return values;
     }
 
     async appendTransaction(data: Transaction): Promise<void> {
