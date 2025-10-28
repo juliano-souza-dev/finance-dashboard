@@ -32,10 +32,11 @@ export interface User {
 export type ExpenseStatus = 'pending' | 'paid';
 
 export interface TransactionFilters {
+    id?: string;
     month?: string; 
     year?: string;  
-    type?: 'income' | 'expense';
     category?: string;
-    status?: ExpenseStatus; // <-- NOVO FILTRO: Status de pagamento
+    type?: 'Entrada' | 'Saída' | 'income' | 'expense' | string;
+    status?: 'Pago' | 'Pendente' | 'paid' | 'pending' | string;
 }
 

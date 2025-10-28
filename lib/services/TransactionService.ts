@@ -27,4 +27,12 @@ export class TransactionService {
     this.googleSheetService.appendTransaction(transactionData)
     
   }
+  async updateRegister(id: string) {
+     await this.googleSheetService.updateData(id)
+ }
+
+ async delete(id: string) {
+     await this.googleSheetService.deleteTransactionById(id)
+
+ }
 }

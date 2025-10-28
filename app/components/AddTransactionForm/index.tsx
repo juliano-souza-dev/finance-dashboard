@@ -22,6 +22,7 @@ type Props = {
   onClose: () => void;
   onSubmitSuccess: () => void; 
   setLoading:(value: boolean) => void;
+  
 };
 
 type FormState = {
@@ -39,6 +40,7 @@ interface ToggleButtonGroupProps {
   options: { value: string; label: string }[];
   currentValue: string;
   onChange: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  
 }
 
 const ToggleButtonGroup: React.FC<ToggleButtonGroupProps> = ({ name, options, currentValue, onChange }) => (

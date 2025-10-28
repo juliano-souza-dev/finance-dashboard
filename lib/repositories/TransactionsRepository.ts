@@ -11,10 +11,13 @@ export class TransactionsRepository {
   }
 
   getAll(filters: TransactionFilters): Transaction[] {
+  
   let sql = `SELECT * FROM ${this.tableName} WHERE 1=1`;
   const params: (string | number)[] = [];
 
-
+if (filters.id) {
+  sql += ` AND id = ?`;
+}
   
 
   if (filters.month) {

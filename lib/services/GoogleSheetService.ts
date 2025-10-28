@@ -103,8 +103,7 @@ async fetchAll() {
 }
 
 
-    async appendTransaction(data: Transaction): Promise<void> {
-  // 🔹 Garante formato brasileiro dd/MM/yyyy
+async appendTransaction(data: Transaction): Promise<void> {
   let formattedDate = data.date;
   try {
     const parsed = new Date(data.date);
@@ -133,5 +132,78 @@ async fetchAll() {
   });
 }
 
-  
+async updateData(id: string) {
+  console.log("UPDATE")
+await this.ensureConnection();
+
+    const sheetResponse = await this.sheetAPI.spreadsheets.values.get({
+      spreadsheetId: this.sheetID,
+      range: this.range,
+    });
+
+    const sheetValues = sheetResponse.data.values ?? [];
+    const headers: string[] = sheetValues.shift() ?? [];
+
+    const idIndex = headers.indexOf("ID");
+    const statusIndex = headers.indexOf("Status");
+
+    if (idIndex === -1) throw new Error("Coluna 'ID' não encontrada.");
+    if (statusIndex === -1) throw new Error("Coluna 'Status' não encontrada.");
+
+    
+    // 🔍 Localiza linha do ID
+    const rowIndex = sheetValues.findIndex((row) => row[idIndex] === id);
+    if (rowIndex === -1) throw new Error(`Transação com ID ${id} não encontrada.`);
+
+    // 🧩 Atualiza o campo "Status" para "Pago"
+    sheetValues[rowIndex][statusIndex] = "Pago";
+
+    // 📝 Define o range da linha específica
+    const targetRange = `Transactions!A${rowIndex + 2}:G${rowIndex + 2}`;
+
+    console.log(targetRange)
+    // 🚀 Atualiza no Sheets
+    await this.sheetAPI.spreadsheets.values.update({
+      spreadsheetId: this.sheetID,
+      range: targetRange,
+      valueInputOption: "USER_ENTERED",
+      requestBody: { values: [sheetValues[rowIndex]] },
+    });
+
+    console.log(`✅ Transação ${id} atualizada com sucesso para "Pago".`);
+}
+
+async deleteTransactionById(id: string): Promise<void> {
+  await this.ensureConnection();
+
+  // 🔹 Busca todos os valores atuais
+  const sheetResponse = await this.sheetAPI.spreadsheets.values.get({
+    spreadsheetId: this.sheetID,
+    range: this.range,
+  });
+
+  const sheetValues = sheetResponse.data.values ?? [];
+  const headers: string[] = sheetValues.shift() ?? [];
+
+  const idIndex = headers.indexOf("ID");
+  if (idIndex === -1) throw new Error("Coluna 'ID' não encontrada na planilha.");
+
+  // 🔍 Encontra a linha com o ID correspondente
+  const rowIndex = sheetValues.findIndex((row) => row[idIndex] === id);
+  if (rowIndex === -1) throw new Error(`Transação com ID ${id} não encontrada.`);
+
+  // 🚮 Remove a linha
+  sheetValues.splice(rowIndex, 1);
+
+  // 📝 Atualiza o conteúdo da planilha (reescreve tudo, preservando cabeçalho)
+  await this.sheetAPI.spreadsheets.values.update({
+    spreadsheetId: this.sheetID,
+    range: this.range,
+    valueInputOption: "USER_ENTERED",
+    requestBody: { values: [headers, ...sheetValues] },
+  });
+
+  console.log(`🗑️ Transação ${id} removida com sucesso do Google Sheets.`);
+}
+
 }

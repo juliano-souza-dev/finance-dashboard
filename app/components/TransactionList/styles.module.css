@@ -1,0 +1,154 @@
+.transactionList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-bottom: 2rem;
+}
+
+.listTitle {
+  font-weight: 600;
+  color: #ccc;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.emptyMessage {
+  color: #888;
+  text-align: center;
+  font-style: italic;
+  border: 1px dashed #333;
+  border-radius: 8px;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.transactionItem {
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.transactionItem:hover {
+  background: #181818;
+  transform: scale(1.01);
+}
+
+.description {
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.date {
+  font-size: 0.85rem;
+  color: #888;
+}
+
+.value {
+  font-weight: 600;
+}
+
+.income .value {
+  color: #0f0;
+}
+
+.expense .value {
+  color: #f55;
+}
+
+/* ======== Modal ======== */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modalContent {
+  background: #111;
+  color: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #222;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.modalTitle {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.closeButton {
+  display: block;
+  margin: 1.2rem auto 0;
+  padding: 0.6rem 1.2rem;
+  background: #333;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.25s;
+}
+
+.closeButton:hover {
+  background: #555;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modalActions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  gap: 1rem;
+}
+
+.actionButton {
+  flex: 1;
+  padding: 0.7rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #fff;
+  font-weight: 600;
+  transition: background 0.25s;
+}
+
+.payButton {
+  background: #0a7d0a;
+}
+
+.payButton:hover {
+  background: #13a113;
+}
+
+.deleteButton {
+  background: #b00020;
+}
+
+.deleteButton:hover {
+  background: #e63946;
+}

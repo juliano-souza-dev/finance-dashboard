@@ -110,3 +110,51 @@ try {
     );
 }
 }
+export async function DELETE(request: NextRequest) {
+ try {
+    const id = request.nextUrl.searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json({ error: "ID é obrigatório." }, { status: 400 });
+    }
+
+    const google = new GoogleSheetService();
+    await google.deleteTransactionById(id);
+
+    return NextResponse.json({
+      success: true,
+      message: `Transação ${id} excluída com sucesso!`,
+    });
+  } catch (err: any) {
+    console.error("Erro ao excluir transação:", err);
+    return NextResponse.json(
+      { error: err.message || "Erro interno ao excluir transação." },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(request: NextRequest) {
+   const transactionService:TransactionService = new TransactionService();
+
+try {
+  const id = request.nextUrl.searchParams.get("id");
+
+  await transactionService.updateRegister(id!)
+
+  return NextResponse.json({ok: true})
+} catch(error: any) {
+ if (error.name === "ZodError") {
+      return NextResponse.json(
+        { error: "Erro de validação", details: error.errors },
+        { status: 400 }
+      );
+    }
+
+    console.error("Erro ao salvar transação:", error);
+     return NextResponse.json(
+      { error: "Erro interno ao salvar a transação" },
+      { status: 500 }
+    );
+}
+}
