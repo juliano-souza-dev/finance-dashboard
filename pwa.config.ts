@@ -1,14 +1,21 @@
-// pwa.config.js
-// @ts-check
+// pwa.config.ts
 
-/** @type {import('next').NextConfig} */
-const pwaConfig = {
+type PWAOptions = {
+  dest: string;
+  register: boolean;
+  skipWaiting: boolean;
+  disable?: boolean;
+  runtimeCaching?: unknown[];
+};
+
+const pwaConfig: PWAOptions = {
   dest: 'public',
   register: true,
   skipWaiting: true,
   disable: process.env.NODE_ENV === 'development',
   runtimeCaching: [
     {
+      // Google Fonts
       urlPattern: /^https:\/\/fonts\.(?:gstatic|googleapis)\.com\/.*/i,
       handler: 'CacheFirst',
       options: {
@@ -17,6 +24,7 @@ const pwaConfig = {
       },
     },
     {
+      // Imagens/ícones
       urlPattern: /\.(?:png|jpg|jpeg|svg|gif|ico)$/i,
       handler: 'StaleWhileRevalidate',
       options: {
@@ -25,11 +33,13 @@ const pwaConfig = {
       },
     },
     {
+      // JS/CSS
       urlPattern: /\.(?:js|css)$/i,
       handler: 'StaleWhileRevalidate',
       options: { cacheName: 'static-resources' },
     },
     {
+      // APIs do app (transactions)
       urlPattern: /\/api\/transactions/i,
       handler: 'NetworkFirst',
       options: {
@@ -41,4 +51,4 @@ const pwaConfig = {
   ],
 };
 
-module.exports = pwaConfig;
+export default pwaConfig;
