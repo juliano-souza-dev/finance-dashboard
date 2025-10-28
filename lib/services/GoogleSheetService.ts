@@ -36,7 +36,7 @@ export class GoogleSheetService {
     }
 
 
-    async fetchAll(): Promise<void/*Transaction[]*/> {
+    async fetchAll() {
 
         await this.ensureConnection();
         const {data} = await this.sheetAPI.spreadsheets.values.get({
@@ -85,6 +85,8 @@ return [mappedKey ?? key, cellValue];
     );
         
      this.transactionsRepository.saveToCache(transactionsInJson as Transaction[]);
+
+     return transactionsInJson;
     }
 
     async appendTransaction(data: Transaction): Promise<void> {

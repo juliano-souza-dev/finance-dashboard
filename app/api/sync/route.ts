@@ -5,6 +5,6 @@ const googleSheetService: GoogleSheetService = new GoogleSheetService()
 export async function GET(request: NextRequest) {
 
     const result = await googleSheetService.fetchAll();
-    return NextResponse.json({})
+    return NextResponse.json({result})
 
 }
