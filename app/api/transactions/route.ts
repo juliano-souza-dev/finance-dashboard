@@ -1,6 +1,8 @@
 
-export const revalidate = 0; // 🚫 nunca revalida
-export const dynamic = "force-dynamic"; // 🚫 desativa cache em rotas serverless
+export const revalidate = 0;          // 🚫 nunca revalida
+export const dynamic = 'force-dynamic'; // 🚫 força execução a cada request
+export const fetchCache = 'force-no-store'; // 🚫 desativa cache global de fetch
+
 
 import { getAuthenticatedUser } from "@/lib/auth-helper";
 import { GoogleSheetService } from "@/lib/services/GoogleSheetService";
