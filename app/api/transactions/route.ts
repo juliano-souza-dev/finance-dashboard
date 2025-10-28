@@ -56,7 +56,13 @@ const filters = validation.data as TransactionFilters
 
 
 
-    return NextResponse.json({ transactions });
+    return NextResponse.json({ transactions },{
+        headers: {
+    'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+    'Pragma': 'no-cache',
+    'Expires': '0',
+  }
+    });
     
   } catch (error: unknown) {
     if(error instanceof Error) {
