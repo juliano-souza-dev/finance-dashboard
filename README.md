@@ -169,12 +169,58 @@ Com isso, o dashboard passa a refletir dados reais da planilha, mantendo o desem
 Add dynamic filtering functionality to the Dashboard, allowing users to refine transactions by multiple criteria (Status, Month, Year, and Category).
 This feature improves usability and provides a faster way to locate specific data directly within the interface.
 
-✅ Tasks
+### Tarefas
+
+
 
 - [x] Create a filter state to store active filter values (month, year).
 
 - [x] Implement filter logic to dynamically update the displayed transactions.
 
 
+## 🧩 Milestone 9 — Progressive Web App (PWA) Transformation
 
+
+
+🎯 Goal
+
+Transform the Finance Dashboard into a Progressive Web App (PWA), allowing users to install it on desktop and mobile devices, access it offline, and benefit from app-like performance.
+This milestone focuses on adding the manifest, service worker, and caching strategies.
+###  Tasks
+- [] Setup & Configuration
+
+- [] Add a manifest.json file with:
+      App name, short name, description
+      Icons (192x192, 512x512)
+- [] Theme color and background color
+- [] Display mode set to "standalone"
+- [] Create a custom icon set for the app (public/icons/) to use as app icons and splash screen.
+
+- []Configure Next.js for PWA support using:
+      next-pwa
+      plugin (recommended)
+
+🔁 Offline Functionality
+
+ - [] Cache the essential pages:
+
+  /dashboard
+
+ /api/transactions
+
+ /api/categories
+
+Static assets (CSS, JS, icons)
+
+ - [] Add fallback for offline mode with a user-friendly message:
+
+      “Você está offline. As últimas transações carregadas estão sendo exibidas.”
+
+- [] 📱 App-Like Behavior
+
+- [] Add install banner (beforeinstallprompt) support.
+
+- [] Add splash screen and favicon configuration.
+
+- []Ensure responsive full-screen display (display: standalone).
 

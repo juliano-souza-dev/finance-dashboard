@@ -7,6 +7,8 @@ import { HEADER_SHEETS_TO_CODE, HeaderEN, HeaderPT } from "@/constants/db-mappin
 import { normalizeDateToDB} from "../helpers/date-normalize-helper";
 
 
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 export class GoogleSheetService {
 
@@ -21,6 +23,14 @@ export class GoogleSheetService {
         this.openConnectionWithAPI();
     }
 
+
+    private async ensureConnection() {
+        
+    if (!this.sheetAPI) {
+      this.sheetAPI = await getGoogleSheetsClient();
+    }
+  }
+
     private async openConnectionWithAPI() {
         this.sheetAPI = await getGoogleSheetsClient();
     }
@@ -28,6 +38,7 @@ export class GoogleSheetService {
 
     async fetchAll(): Promise<void/*Transaction[]*/> {
 
+        await this.ensureConnection();
         const {data} = await this.sheetAPI.spreadsheets.values.get({
             spreadsheetId: this.sheetID,
             range: this.range
@@ -77,25 +88,34 @@ return [mappedKey ?? key, cellValue];
     }
 
     async appendTransaction(data: Transaction): Promise<void> {
-
-        const row:( String|Number)[] = [
-            data.id,
-            data.date,
-            data.description,
-            data.category,
-            data.value,
-            data.type,
-            data.status
-        ] 
-
-        this.sheetAPI.spreadsheets.values.append({
-            spreadsheetId:this.sheetID,
-            range: 'transactions!A:G',
-            valueInputOption: "USER_ENTERED",
-            requestBody:{values: [row]}
-
-        })
+  // 🔹 Garante formato brasileiro dd/MM/yyyy
+  let formattedDate = data.date;
+  try {
+    const parsed = new Date(data.date);
+    if (!isNaN(parsed.getTime())) {
+      formattedDate = format(parsed, "dd/MM/yyyy", { locale: ptBR });
     }
+  } catch {
+    console.warn("Data inválida recebida, mantendo formato original:", data.date);
+  }
+
+  const row: (string | number)[] = [
+    data.id,
+    formattedDate,
+    data.description,
+    data.category,
+    data.value,
+    data.type as string,
+    data.status as string,
+  ];
+
+  await this.sheetAPI.spreadsheets.values.append({
+    spreadsheetId: this.sheetID,
+    range: "transactions!A:G",
+    valueInputOption: "USER_ENTERED",
+    requestBody: { values: [row] },
+  });
+}
 
   
 }
